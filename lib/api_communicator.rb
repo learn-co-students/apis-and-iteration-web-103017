@@ -20,11 +20,12 @@ end
 
 def show_character_movies(character)
   character.each do |user_char|
+    puts "-#{user_char}"
     films_hash = get_character_movies_from_api(user_char)
     parse_character_movies(films_hash).collect do |x|
       movie = RestClient.get(x)
       movie_hash = JSON.parse(movie)
-      puts movie_hash["title"]
+      puts "--#{movie_hash["title"]}"
     end
   end
 
