@@ -22,19 +22,21 @@ def get_character_movies_from_api(character)
   # binding.pry
   # film_urls = char_stats[character].select{|stats| char_stats["films"]}
   #UPDATE: THink about replacing [0] with a better idea
-  film_urls = char_stats.select{|stats| stats["name"].downcase == character}[0]["films"]
+  # film_urls = char_stats.select{|stats| stats["name"].downcase == character}[0]["films"]
+  film_urls = char_stats.find{|stats| stats["name"].downcase == character}["films"]
 
   film_urls.inject([]) do |film_info, film_url|
+    # binding.pry
+
     filmzz = JSON.parse(RestClient.get(film_url))
     film_info << filmzz
     film_info
   end
   #ASK Q: How do you test the value of an inject output like film_info above with binding.pry
 
-
 end
 
-# puts get_character_movies_from_api("Luke Skywalker").class
+# get_character_movies_from_api("Luke Skywalker")
 
 def parse_character_movies(films_hash)
   # some iteration magic and puts out the movies in a nice list
