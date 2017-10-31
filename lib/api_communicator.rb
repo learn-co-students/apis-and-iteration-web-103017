@@ -5,7 +5,12 @@ require 'pry'
 def get_character_movies_from_api(character)
 
   all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  character_hash = JSON.parse(all_characters)
+  character_hash1 = JSON.parse(all_characters)
+
+  more_characters = RestClient.get('https://www.swapi.co/api/people/?page=2')
+  character_hash2 = JSON.parse(more_characters)
+
+  character_hash = character_hash1.merge(character_hash2)
 
   target = character_hash["results"]
   film_array = []
