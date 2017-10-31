@@ -34,6 +34,10 @@ def get_character_movies_from_api(character)
   end
   #ASK Q: How do you test the value of an inject output like film_info above with binding.pry
 
+  # film_urls.map do |film_url|
+  # filmzz = JSON.parse(RestClient.get(film_url))
+end
+
 end
 
 # get_character_movies_from_api("Luke Skywalker")
