@@ -7,14 +7,19 @@ def get_character_movies_from_api(character)
   all_characters = RestClient.get('http://www.swapi.co/api/people/')
   character_hash = JSON.parse(all_characters)
   output = []
-
-  found_char = character_hash['results'].find do |individual_character|
-    individual_character['name'] == character
-    #puts individual_character['films']
-  end
-  found_char['films'].each do |link|
-    movie_info = RestClient.get(link)
-    output << JSON.parse(movie_info)
+  while character_hash
+    found_char = character_hash['results'].find do |individual_character|
+      individual_character['name'] == character
+      #puts individual_character['films']
+    end
+    if found_char
+      found_char['films'].each do |link|
+        movie_info = RestClient.get(link)
+        output << JSON.parse(movie_info)
+      end
+      break
+    end
+    character_hash = character_hash['next'] ? JSON.parse(RestClient.get(character_hash['next']) ) : nil
   end
   output
 end
