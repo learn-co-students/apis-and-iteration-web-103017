@@ -6,11 +6,23 @@ def get_character_movies_from_api(character)
   #make the web request
   all_characters = RestClient.get('http://www.swapi.co/api/people/')
   character_hash = JSON.parse(all_characters)
-  character_hash["results"].collect do |x|
-    if x["name"] == character
-      return x
+
+  while 
+    hsh = {}
+
+    character_hash["results"].collect do |x|
+      hsh[x["name"]] = x
     end
+
+    if hsh.has_key?(character) == true
+      return hsh[character]
+      break
+    else
+      character_hash = JSON.parse(RestClient.get(character_hash["next"]))
+    end
+
   end
+
 end
 
 
