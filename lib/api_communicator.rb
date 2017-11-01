@@ -3,14 +3,11 @@ require 'json'
 require 'pry'
 
 def get_character_movies_from_api(character)
-  #make the web request
-
-  # all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  # character_hash = JSON.parse(all_characters)
 
   all_chars_all_pages = []
-
   i = 1
+  
+  #collect data from all pages and store in all_chars_all_pages
   while JSON.parse(RestClient.get("https://www.swapi.co/api/people/?page=#{i}"))["next"]
     all_chars_all_pages << JSON.parse(RestClient.get("https://www.swapi.co/api/people/?page=#{i}"))["results"]
     i += 1
@@ -18,6 +15,8 @@ def get_character_movies_from_api(character)
 
   all_chars_all_pages.flatten!
 
+  # 1st collect grabs list of films actor has played in, 2nd collect
+  # grabs details of movie for each movie url provided in step 1
   all_chars_all_pages.collect do |char_details_hsh|
     char_details_hsh["films"] if character == char_details_hsh["name"].downcase
   end.compact.flatten.collect do |movie_url|
@@ -25,15 +24,7 @@ def get_character_movies_from_api(character)
     request_parsed = JSON.parse(request)
   end
 
-  # iterate over the character hash to find the collection of `films` for the given
-  #   `character`
-  # collect those film API urls, make a web request to each URL to get the info
-  #  for that film
-  # return value of this method should be collection of info about each film.
-  #  i.e. an array of hashes in which each hash reps a given film
-  # this collection will be the argument given to `parse_character_movies`
-  #  and that method will do some nice presentation stuff: puts out a list
-  #  of movies by title. play around with puts out other info about a given film.
+
 end
 
 def parse_character_movies(films_hash)
