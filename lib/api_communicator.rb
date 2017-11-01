@@ -3,23 +3,61 @@ require 'json'
 require 'pry'
 
 
+def all_characters_combined
+  character_arr = []
+  counter = 1
+
+  until counter == 9
+    all_characters = RestClient.get("http://www.swapi.co/api/people/?page=#{counter}")
+    character_arr << character_hash = JSON.parse(all_characters)
+    counter += 1
+  end
+
+  character_arr
+
+end
+
 
 def get_character_movies_from_api(character)
   #make the web request
-  all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  character_hash = JSON.parse(all_characters)
+  characters_arr = all_characters_combined
+  # all_characters = RestClient.get('http://www.swapi.co/api/people/')
+  # character_hash = JSON.parse(all_characters)
 # condense?
-  character_hash["results"].each do |hsh|
-     hsh.each do |category, value|
-       if category == "name"
-         if value.downcase == character
-           return hsh["films"].collect do |links|
-             JSON.parse(RestClient.get(links))
+
+  characters_arr.each do |character_hash|
+    character_hash["results"].each do |hsh|
+       hsh.each do |category, value|
+         if category == "name"
+           if value.downcase == character
+             return hsh["films"].collect do |links|
+               JSON.parse(RestClient.get(links))
+             end
            end
          end
        end
-     end
+    end
   end
+
+
+
+  # character_hash["results"].each do |hsh|
+  #   hsh.each do |category, value|
+  #     binding.pry
+  #     until hsh.values.downcase.include?(character)
+  #       character_hash = JSON.parse(ResClient.get(character_hash["next"]))
+  #     end
+  #     hsh.each do |category, value|
+  #       if category == "name"
+  #         if value.downcase == character
+  #           return hsh["films"].collect do |links|
+  #             JSON.parse(RestClient.get(links))
+  #           end
+  #         end
+  #       end
+  #     end
+  #   end
+
 
   # iterate over the character hash to find the collection of `films` for the given
   #   `character`
@@ -44,10 +82,10 @@ def parse_character_movies(films_hash) #assuming films_hash == get_character_mov
 end
 
 def show_character_movies(character)
-  # films_hash = get_character_movies_from_api(character)
-  # parse_character_movies(films_hash)
+   films_hash = get_character_movies_from_api(character)
+   parse_character_movies(films_hash)
 
-  parse_character_movies(film_results(character))
+  # parse_character_movies(film_results(character))
 end
 
 # Helper methods
