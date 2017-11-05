@@ -41,7 +41,7 @@ def get_character_movies_from_api(character)
       # binding.pry
     end
 
-    film_urls = star_wars_characters.find{|star| star["name"].downcase == character}["films"]
+    star_wars_characters.find{|star| star["name"].downcase == character}["films"]
     # iterate over the character hash to find the collection of `films` for the given
     #   `character`
     # collect those film API urls, make a web request to each URL to get the info
@@ -61,7 +61,7 @@ def get_character_movies_from_api(character)
 
   def get_films(film_urls)
     film_urls.map do |film_url|
-      filmzz = JSON.parse(RestClient.get(film_url))
+      JSON.parse(RestClient.get(film_url))
     end
   end
   # film_urls.inject([]) do |film_info, film_url|
